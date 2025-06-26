@@ -22,6 +22,7 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 require("sb.remap")
 require("sb.settings")
+require("sb.project_setup")
 
 -- Setup lazy.nvim
 require("lazy").setup({
