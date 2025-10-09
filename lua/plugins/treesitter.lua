@@ -14,7 +14,7 @@ return {
     '<c-space>', desc = 'Increment Selection'
   },
   opts  = {
-    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "javascript", "typescript", "html" },
+    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "javascript", "typescript", "html", "yaml" },
     highlight = { enable = true },
     indent = { enable = true },
   }

@@ -85,6 +85,40 @@ return {
       -- cmd = { "/path/to/typescript-language-server", "--stdio" },
       filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
     })
+
+    -- Go Language Server (gopls)
+    require('lspconfig').gopls.setup({
+      settings = {
+        gopls = {
+          analyses = {
+            unusedparams = true,
+          },
+          staticcheck = true,
+          gofumpt = true,
+          ["formatting.gofumpt"] = true,
+          codelenses = {
+            gc_details = false,
+            generate = true,
+            regenerate_cgo = true,
+            run_govulncheck = true,
+            test = true,
+            tidy = true,
+            upgrade_dependency = true,
+            vendor = true,
+          },
+          hints = {
+            assignVariableTypes = true,
+            compositeLiteralFields = true,
+            compositeLiteralTypes = true,
+            constantValues = true,
+            functionTypeParameters = true,
+            parameterNames = true,
+            rangeVariableTypes = true,
+          },
+        },
+      },
+    })
+
     require('lspconfig').biome.setup({})
   end
 }
