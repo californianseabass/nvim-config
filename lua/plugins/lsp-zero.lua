@@ -94,7 +94,7 @@ return {
             unusedparams = true,
           },
           staticcheck = true,
-          gofumpt = true,
+          -- gofumpt = true,
           ["formatting.gofumpt"] = true,
           codelenses = {
             gc_details = false,
