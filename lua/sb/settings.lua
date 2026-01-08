@@ -4,3 +4,7 @@ vim.opt.shiftwidth = 2   -- number of spaces to use for each step of (auto)inden
 vim.opt.expandtab = true -- expand TABs to spaces
 
 vim.o.exrc = true
+
+vim.diagnostic.config({
+  virtual_text = true,
+})
