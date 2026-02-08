@@ -11,15 +11,9 @@ return {
     vim.opt.signcolumn = 'yes'
   end,
   config = function()
-    local lsp_defaults = require('lspconfig').util.default_config
-
     -- Add cmp_nvim_lsp capabilities settings to lspconfig
     -- This should be executed before you configure any language server
-    lsp_defaults.capabilities = vim.tbl_deep_extend(
-      'force',
-      lsp_defaults.capabilities,
-      require('cmp_nvim_lsp').default_capabilities()
-    )
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     -- LspAttach is where you enable features that only work
     -- if there is a language server active in the file
@@ -27,6 +21,7 @@ return {
       desc = 'LSP actions',
       callback = function(event)
         local opts = { buffer = event.buf }
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
 
         vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
@@ -38,9 +33,21 @@ return {
         vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
         vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+
+
+        if not client then
+          return
+        end
+
         vim.api.nvim_create_autocmd("BufWritePre", {
           buffer = event.buf,
           callback = function()
+            if client and client.name == 'biome' then
+              vim.lsp.buf.code_action({
+                context = { only = { 'source.organizeImports.biome' } },
+                apply = true,
+              })
+            end
             vim.lsp.buf.format { async = false, id = event.data.client_id }
           end,
         })
@@ -50,11 +57,13 @@ return {
     -- These are just examples. Replace them with the language
     -- servers you have installed in your system
     -- require('lspconfig').gleam.setup({})
-    require('lspconfig').lua_ls.setup({})
+    vim.lsp.config('lua_ls', { capabilities = capabilities })
+    vim.lsp.enable('lua_ls')
     -- require('lspconfig')
 
     -- TypeScript server configuration
-    require('lspconfig').ts_ls.setup({
+    vim.lsp.config('ts_ls', {
+      capabilities = capabilities,
       settings = {
         typescript = {
           inlayHints = {
@@ -85,9 +94,11 @@ return {
       -- cmd = { "/path/to/typescript-language-server", "--stdio" },
       filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
     })
+    vim.lsp.enable('ts_ls')
 
     -- Go Language Server (gopls)
-    require('lspconfig').gopls.setup({
+    vim.lsp.config('gopls', {
+      capabilities = capabilities,
       settings = {
         gopls = {
           analyses = {
@@ -118,7 +129,9 @@ return {
         },
       },
     })
+    vim.lsp.enable('gopls')
 
-    require('lspconfig').biome.setup({})
+    vim.lsp.config('biome', { capabilities = capabilities })
+    vim.lsp.enable('biome')
   end
 }
