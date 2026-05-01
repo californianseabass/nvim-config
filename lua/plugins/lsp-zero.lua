@@ -133,5 +133,19 @@ return {
 
     vim.lsp.config('biome', { capabilities = capabilities })
     vim.lsp.enable('biome')
+
+    vim.lsp.config('clangd', {
+      capabilities = capabilities,
+      cmd = {
+        'clangd',
+        '--background-index',
+        '--clang-tidy',
+        '--header-insertion=iwyu',
+        '--completion-style=detailed',
+        '--function-arg-placeholder=true',
+      },
+      filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+    })
+    vim.lsp.enable('clangd')
   end
 }
